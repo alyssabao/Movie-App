@@ -150,6 +150,7 @@
   margin: 20px;
   background-image: url("https://i.ibb.co/F8t4Mj0/cinema-background.jpg");
   background-size: 50vw;
+  background-repeat: no-repeat;
   color: white;
   padding: 20px;
   width: 50vw;
@@ -166,4 +167,42 @@
 .redText {
   color: rgb(206, 23, 23);
   font-weight: bolder;
+}
+
+.vidFormat {
+  width: 75vw;
+  height: 75vh;
+}
+
+.centerVid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.ReactModal__Overlay {
+  opacity: 0;
+  transition: opacity 2000ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open{
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close{
+  opacity: 0;
+}
+
+@media (max-width: 914px) {
+  .componentTwo {
+    flex-direction: column;
+  }
+  .carouselSize {
+    width: 90vw;
+  }
+  .intro {
+    width: 90vw;
+    background-size: cover;
+  }
 }

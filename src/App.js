@@ -3,9 +3,9 @@ import MovieList from './components/MovieList.js'
 import MovieCarousel from './components/MovieCarousel.js'
 import LoadMore from './components/LoadMore.js'
 import Header from './components/Header.js'
+import VidModal from './components/VidModal.js'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import ReactModal from 'react-modal';
 const apiKey = process.env.REACT_APP_APIKEY;
 let numMovies = 1;
 
@@ -13,6 +13,7 @@ function App() {
   let [movieList, setMovieList] = useState(null);
   let [genre, setGenre] = useState(null);
   let [modalOpen, setModalOpen] = useState(false);
+  let [link, setLink] = useState(null);
 
   const getGenre = async () => {
     let url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=en-US`
@@ -21,6 +22,14 @@ function App() {
     getLatestMovie()
     setGenre(result.genres)
     console.log("genre data looks like", result)
+  }
+
+  const getLink = async (id) => {
+    let url = `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${apiKey}&language=en-US`
+    let data = await fetch(url)
+    let result = await data.json();
+    setLink(result.results[0].key)
+    setModalOpen(true)
   }
 
   const getLatestMovie = async () => {
@@ -89,13 +98,10 @@ function App() {
       <Header mostPopular = {mostPopular} leastPopular = {leastPopular} getLatestMovie ={getLatestMovie} getTopRatedMovie = {getTopRatedMovie}/>
       <MovieCarousel />
       <div>
-        <MovieList movieList={movieList} genresFromApp={genre} openModal ={openModal} />
+        <MovieList movieList={movieList} genresFromApp={genre} openModal ={openModal} getLink={getLink}/>
       </div>
       <LoadMore previousPage = {previousPage} nextPage = {nextPage}/>
-      <ReactModal isOpen={modalOpen}>
-        <button onClick={()=>closeModal()}>close</button>
-        Hi, this is Alyssa!
-      </ReactModal>
+      <VidModal modalOpen={modalOpen} closeModal = {closeModal} link = {link}/>
     </div>
   );
 }

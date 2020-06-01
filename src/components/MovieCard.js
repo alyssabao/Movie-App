@@ -24,7 +24,7 @@ export default function MovieCard(props) {
                         )})}
                     </div>
                     <p className="borderLine">{movie.overview}</p>
-                    <button className="btn btn-danger" onClick = {() => props.openModal()}>Watch Trailer</button>
+                    <button className="btn btn-danger" onClick = {() => props.getLink(movie.id)}>Watch Trailer</button>
                 </div>
             </div>
         </div >
