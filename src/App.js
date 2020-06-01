@@ -5,12 +5,14 @@ import LoadMore from './components/LoadMore.js'
 import Header from './components/Header.js'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import ReactModal from 'react-modal';
 const apiKey = process.env.REACT_APP_APIKEY;
 let numMovies = 1;
 
 function App() {
-  let [movieList, setMovieList] = useState(null)
-  let [genre, setGenre] = useState(null)
+  let [movieList, setMovieList] = useState(null);
+  let [genre, setGenre] = useState(null);
+  let [modalOpen, setModalOpen] = useState(false);
 
   const getGenre = async () => {
     let url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=en-US`
@@ -36,12 +38,27 @@ function App() {
     setMovieList(result.results)
   }
 
-  const sortTopRatedMovie = async () => {
-    let url = `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=${numMovies}`
-    let data = await fetch(url)
-    let result = await data.json();
-    setMovieList(result.results.popularity.sort())
-  }
+  const mostPopular = () => {
+    const sortedMovieList = movieList.sort(function (a, b) {
+
+      return (b.vote_average - a.vote_average);
+
+    });
+    setMovieList([... sortedMovieList]);
+    console.log("I am here!", sortedMovieList)
+
+  };
+
+  const leastPopular = () => {
+    const sortedMovieList = movieList.sort(function (a, b) {
+
+      return (a.vote_average - b.vote_average);
+
+    });
+    setMovieList([... sortedMovieList]);
+    console.log("I am least popular!", sortedMovieList)
+
+  };
 
   const nextPage = () => {
     numMovies++;
@@ -53,6 +70,14 @@ function App() {
     getLatestMovie()
   }
 
+  const closeModal = () => {
+    setModalOpen(false)
+  }
+
+  const openModal = () => {
+    setModalOpen(true)
+  }
+
   useEffect(() => { getGenre(); }, [])
 
   if (movieList === null) {
@@ -61,30 +86,16 @@ function App() {
 
   return (
     <div className="App">
-      <div className="headerFormat">
-            <div>
-                <img src="https://i.ibb.co/B6QB16B/baohaus-logo.png" width="300px" />
-            </div>
-            <div className="rightFormat">
-            <div class="btn-group">
-                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Sort
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="https://www.google.com/">Most Popular First</a>
-                        <a class="dropdown-item" href="https://www.google.com/">Least Popular First</a>
-                    </div>
-                </div>
-                <h2 className="fontSize" onClick={getLatestMovie}>Now Playing</h2>
-                <h2 className="fontSize" onClick={getTopRatedMovie}>Top Rated</h2>
-            </div>
-        </div>
-      <MovieCarousel/>
+      <Header mostPopular = {mostPopular} leastPopular = {leastPopular} getLatestMovie ={getLatestMovie} getTopRatedMovie = {getTopRatedMovie}/>
+      <MovieCarousel />
       <div>
-        <MovieList movieList={movieList} genresFromApp={genre} />
+        <MovieList movieList={movieList} genresFromApp={genre} openModal ={openModal} />
       </div>
-      <button type="button" className="btn btn-danger btn-lg" onClick={previousPage}>Previous Page</button>
-      <button type="button" className="btn btn-danger btn-lg" onClick={nextPage}>Next Page</button>
+      <LoadMore previousPage = {previousPage} nextPage = {nextPage}/>
+      <ReactModal isOpen={modalOpen}>
+        <button onClick={()=>closeModal()}>close</button>
+        Hi, this is Alyssa!
+      </ReactModal>
     </div>
   );
 }

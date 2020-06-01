@@ -9,7 +9,7 @@ export default function MovieList(props) {
   return (
     <div className="movieSpace">
       {props.movieList.map((item) => {
-        return <MovieCard movie={item} genresFromMovieList={props.genresFromApp}/>;
+        return <MovieCard movie={item} genresFromMovieList={props.genresFromApp} openModal = {props.openModal}/>;
       })}
     </div>
   );
