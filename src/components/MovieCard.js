@@ -1,6 +1,5 @@
 import React from "react";
 import moment from 'moment'
-import 'C:/Users/inxjv/Desktop/Mojave/movieapp/src/App.css'
 
 export default function MovieCard(props) {
     let movie = props.movie;
